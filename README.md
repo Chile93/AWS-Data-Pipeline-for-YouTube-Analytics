@@ -14,7 +14,7 @@ This project demonstrates the design and implementation of a scalable, serverles
 
 ## Architecture Overview
 
-<img src="Architecture.jpg">
+<img src="Architecture.jpeg">
 
 
 The architecture consists of several AWS services working together to process data in real time:
