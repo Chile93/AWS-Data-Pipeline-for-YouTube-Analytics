@@ -16,6 +16,7 @@ This project demonstrates the design and implementation of a scalable, serverles
 
 <img src="Architecture.jpg">
 
+
 The architecture consists of several AWS services working together to process data in real time:
 
 - **Data Ingestion**: YouTube data is extracted using an API and stored in the **S3 Landing Area**.
