@@ -1,0 +1,29 @@
+import sys
+from awsglue.transforms import *
+from awsglue.utils import getResolvedOptions
+from pyspark.context import SparkContext
+from awsglue.context import GlueContext
+from awsglue.job import Job
+
+args = getResolvedOptions(sys.argv, ['JOB_NAME'])
+sc = SparkContext()
+glueContext = GlueContext(sc)
+spark = glueContext.spark_session
+job = Job(glueContext)
+job.init(args['JOB_NAME'], args)
+
+# Script generated for node parquet-analytics1
+parquetanalytics1_node1728419713842 = glueContext.create_dynamic_frame.from_catalog(database="youtube_de_cleaned", table_name="raw_statistics_reference_data_cleaned", transformation_ctx="parquetanalytics1_node1728419713842")
+
+# Script generated for node parquet-analytics2
+parquetanalytics2_node1728419943374 = glueContext.create_dynamic_frame.from_catalog(database="youtube_de_cleaned", table_name="raw_statistics_cleaned", transformation_ctx="parquetanalytics2_node1728419943374")
+
+# Script generated for node Join
+Join_node1728420026439 = Join.apply(frame1=parquetanalytics1_node1728419713842, frame2=parquetanalytics2_node1728419943374, keys1=["id"], keys2=["category_id"], transformation_ctx="Join_node1728420026439")
+
+# Script generated for node parquet-analytics-target
+parquetanalyticstarget_node1728421066284 = glueContext.getSink(path="s3://youtube-de-cleaned-analytics", connection_type="s3", updateBehavior="UPDATE_IN_DATABASE", partitionKeys=[], enableUpdateCatalog=True, transformation_ctx="parquetanalyticstarget_node1728421066284")
+parquetanalyticstarget_node1728421066284.setCatalogInfo(catalogDatabase="youtube_de_analytics",catalogTableName="final-analytics")
+parquetanalyticstarget_node1728421066284.setFormat("glueparquet", compression="snappy")
+parquetanalyticstarget_node1728421066284.writeFrame(Join_node1728420026439)
+job.commit()
